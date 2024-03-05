@@ -8,7 +8,7 @@ const sendEmail = require("../utils/sendEmail");
 const crypto = require("crypto");
 const path = require("path");
 const cloudinary = require("cloudinary");
-
+const otpModel = require("../models/otpModel")
 
 // Register a User
 exports.registerUser = catchAsyncErrors(async (req, res, next) => {
@@ -81,6 +81,59 @@ exports.loginUser = catchAsyncErrors(async (req, res, next) => {
 
   sendToken(user, 200, res);
 });
+
+
+
+// Login User Using MobileNumber
+exports.otpLogin = catchAsyncErrors(async (req, res, next) => {
+  try {
+
+    const { mobileNo } = req.body;
+
+    if (!mobileNo) {
+      return res.status(400).json({ message: "Enter Mobile Number" });
+    }
+
+    const user = await User.findOne({
+      mobileNo: mobileNo,
+    });
+
+    if (!user) {
+      return res.status(400).send({ message: "mobile number not registered!" });
+    }
+
+    const min = 1000;
+    const max = 9999;
+    const OTP = Math.floor(Math.random() * (max - min + 1)) + min;
+    // console.log(OTP);
+    const key = process.env.OTP_KEY
+    const apiResponse = await axios.get(
+      `https://www.fast2sms.com/dev/bulkV2?authorization=${key}&route=otp&variables_values=${OTP}&flash=0&numbers=${mobileNumber}`
+    );
+    // console.log(apiResponse.data);
+
+    if (apiResponse.data.message === "Invalid Numbers") {
+      return res.status(400).send({ message: "Invalid Numbers! Enter  Correct Number" });
+    }
+
+    const otp = await otpModel({
+      mobileNo: mobileNo,
+      otp: OTP,
+
+    });
+
+    await otp.save();
+    res.status(200).send({ message: "Otp send successfully!", mobileNo: mobileNo , opt: opt});
+
+  } catch (err) {
+    return res
+      .status(500)
+      .send({ status: false, message: err.message })
+  }
+  // sendToken(user, 200, res);
+});
+
+
 
 // Logout User
 exports.logout = catchAsyncErrors(async (req, res, next) => {

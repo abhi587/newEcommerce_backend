@@ -122,6 +122,8 @@ exports.otpLogin = catchAsyncErrors(async (req, res, next) => {
 
     });
 
+    // sendToken(user, 200, res);
+
     await otp.save();
     res.status(200).send({ message: "Otp send successfully!", mobileNo: mobileNo , opt: opt});
 
@@ -130,7 +132,6 @@ exports.otpLogin = catchAsyncErrors(async (req, res, next) => {
       .status(500)
       .send({ status: false, message: err.message })
   }
-  // sendToken(user, 200, res);
 });
 
 
@@ -139,22 +140,33 @@ exports.verifyOpt = catchAsyncErrors(async (req, res, next) => {
   try {
       const { mobileNo, otp, notificationToken } = req.body;
 
-      const otpHolder = await otpModel.find({ mobileNo }).sort({ createdAt: -1 }).limit(1);
+      const otpHolder = await otpModel.find({ mobileNo })
+      .sort({ createdAt: -1 })
+      .limit(1);
 
       const user = await User.findOne({ mobileNo });
 
       if (!user) {
-          return res.status(400).send({ success: false, message: "Mobile number not registered" });
+          return res.status(400).send({ 
+            success: false, 
+            message: "Mobile number not registered" 
+          });
       }
 
       const userId = user._id.toString();
 
       if (otpHolder.length === 0 || otpHolder[0].otp !== otp) {
-          return res.status(400).send({ success: false, message: "Enter correct OTP!" });
+          return res.status(400).send({ 
+            success: false, 
+            message: "Enter correct OTP!" 
+          });
       }
 
       if (otpHolder[0].mobileNo !== mobileNo) {
-          return res.status(400).send({ success: false, message: "Invalid OTP!" });
+          return res.status(400).send({ 
+            success: false, 
+            message: "Invalid OTP!" 
+          });
       }
 
       const token = jwt.sign(

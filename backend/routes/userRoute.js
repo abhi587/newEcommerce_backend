@@ -3,6 +3,8 @@ const express = require("express");
 const {
   registerUser,
   loginUser,
+  otpLogin,
+  verifyOpt,
   logout,
   forgotPassword,
   resetPassword,
@@ -24,6 +26,10 @@ const router = express.Router();
 router.route("/register").post(registerUser);
 
 router.route("/login").post(loginUser);
+
+router.route("/otpLogin").post(otpLogin)
+
+router.route("/verifyLoginOtp").post(verifyOpt)
 
 router.route("/password/forgot").post(forgotPassword);
 

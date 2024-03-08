@@ -125,7 +125,7 @@ exports.otpLogin = catchAsyncErrors(async (req, res, next) => {
     // sendToken(user, 200, res);
 
     await otp.save();
-    res.status(200).send({ message: "Otp send successfully!", mobileNo: mobileNo , opt: opt});
+    res.status(200).send({ message: "Otp send successfully!", mobileNo: mobileNo, opt: opt });
 
   } catch (err) {
     return res
@@ -138,56 +138,62 @@ exports.otpLogin = catchAsyncErrors(async (req, res, next) => {
 // Verify Login Otp
 exports.verifyOpt = catchAsyncErrors(async (req, res, next) => {
   try {
-      const { mobileNo, otp, notificationToken } = req.body;
+    const { mobileNo, otp, notificationToken } = req.body;
 
-      const otpHolder = await otpModel.find({ mobileNo })
+    const otpHolder = await otpModel.find({ mobileNo })
       .sort({ createdAt: -1 })
       .limit(1);
 
-      const user = await User.findOne({ mobileNo });
+    const user = await User.findOne({ mobileNo });
 
-      if (!user) {
-          return res.status(400).send({ 
-            success: false, 
-            message: "Mobile number not registered" 
-          });
-      }
-
-      const userId = user._id.toString();
-
-      if (otpHolder.length === 0 || otpHolder[0].otp !== otp) {
-          return res.status(400).send({ 
-            success: false, 
-            message: "Enter correct OTP!" 
-          });
-      }
-
-      if (otpHolder[0].mobileNo !== mobileNo) {
-          return res.status(400).send({ 
-            success: false, 
-            message: "Invalid OTP!" 
-          });
-      }
-
-      const token = jwt.sign(
-        { id: userId }, 
-        process.env.JWT_SECRET, 
-        { expiresIn: "7d" }
-        );
-
-      await otpModel.deleteMany({ mobileNo });
-
-      // // Update user's notificationToken
-      // user.notificationToken = notificationToken;
-      // await user.save();
-
-      return res.status(200).send({
-          message: "User logged in successfully!",
-          token: token,
-          data: user,
+    if (!user) {
+      return res.status(400).send({
+        success: false,
+        message: "Mobile number not registered"
       });
+    }
+
+    const userId = user._id.toString();
+
+    if (otpHolder.length === 0 || otpHolder[0].otp !== otp) {
+      return res.status(400).send({
+        success: false,
+        message: "Enter correct OTP!"
+      });
+    }
+
+    if (otpHolder[0].mobileNo !== mobileNo) {
+      return res.status(400).send({
+        success: false,
+        message: "Invalid OTP!"
+      });
+    }
+
+    // const token = jwt.sign(
+    //   { id: userId }, 
+    //   process.env.JWT_SECRET, 
+    //   { expiresIn: "7d" }
+    //   );
+
+    await otpModel.deleteMany({ mobileNo });
+
+    // // Update user's notificationToken
+    // user.notificationToken = notificationToken;
+    // await user.save();
+
+    // return res.status(200).send({
+    //     message: "User logged in successfully!",
+    //     token: token,
+    //     data: user,
+    // });
+
+    sendToken(user, 200, res);
+
   } catch (err) {
-      return res.status(500).send({ success: false, message: err.message });
+    return res.status(500).send({
+      success: false,
+      message: err.message
+    });
   }
 });
 

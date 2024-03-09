@@ -177,15 +177,23 @@ exports.getAllProducts = catchAsyncErrors(async (req, res, next) => {
     // 1,2,3,4,5,6,7,8
     // 9,10,11,12,13,14,15,16
     // 17,18,19,20,21,22,23,24
-    const limit = Number(process.env.PRODUCT_PER_PAGE) || 8;
+    const limit = Number(process.env.PRODUCT_PER_PAGE) || 50;
     const skip = (page - 1) * limit;
     const baseQuery = {}
 
+    // if (search) {
+    //   baseQuery.name = {
+    //     $regex: search,
+    //     $options: "i",
+    //   }
+    // }
+
     if (search) {
-      baseQuery.name = {
-        $regex: search,
-        $options: "i",
-      }
+      baseQuery.$or = [
+        { name: { $regex: search, $options: "i" } },
+        { category: { $regex: search, $options: "i" } },
+        { brand: { $regex: search, $options: "i" } },
+      ];
     }
 
     if (price) {
@@ -268,7 +276,7 @@ exports.getProductDetails = catchAsyncErrors(async (req, res, next) => {
 // // Update Product -- Admin
 
 exports.updateProduct = catchAsyncErrors(async (req, res, next) => {
-  const { name, category, price, stock, featured, bestSeller, description, specification } = req.body;
+  const { name, category, price, stock, featured, bestSeller, description, specification, brand, subCategory, mrp, warrantyPeriod } = req.body;
   let product = await Product.findById(req.params.id);
 
   if (!product) {
@@ -278,12 +286,16 @@ exports.updateProduct = catchAsyncErrors(async (req, res, next) => {
   // Update basic fields
   if (name) product.name = name
   if (price) product.price = price
+  if (mrp) product.mrp = mrp
   if (category) product.category = category
+  if (subCategory) product.subCategory = subCategory
+  if (brand) product.brand = brand
   if (stock) product.stock = stock
   if (featured) product.featured = featured
   if (bestSeller) product.bestSeller = bestSeller
   if (description) product.description = description
   if (specification) product.specification = specification
+  if (warrantyPeriod) product.warrantyPeriod = warrantyPeriod
 
   // Replace productImages with new images if provided in the request
   if (req.files && req.files.length > 0) {

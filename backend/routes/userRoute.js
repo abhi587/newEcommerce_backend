@@ -1,7 +1,10 @@
+
 const express = require("express");
 
 const {
   registerUser,
+  otpRegister,
+  verifyOtpRegister,
   loginUser,
   otpLogin,
   verifyOpt,
@@ -25,10 +28,18 @@ const router = express.Router();
 
 router.route("/register").post(registerUser);
 
+//otp register using mobile number
+router.route("/otpRegister").post(otpRegister);
+
+// verify the otp sent
+router.route("/verifyOtpRegister").post(verifyOtpRegister);
+
 router.route("/login").post(loginUser);
 
+//otp login
 router.route("/otpLogin").post(otpLogin)
 
+//verifying that loginOtp
 router.route("/verifyLoginOtp").post(verifyOpt)
 
 router.route("/password/forgot").post(forgotPassword);

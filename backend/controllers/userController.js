@@ -8,10 +8,11 @@ const sendEmail = require("../utils/sendEmail");
 const crypto = require("crypto");
 const path = require("path");
 const cloudinary = require("cloudinary");
-const otpModel = require("../models/otpModel")
+const otpModel = require('../models/otpModel');
 const axios = require('axios')
 
-// Register a User
+
+//********************* Register a User *********************//
 exports.registerUser = catchAsyncErrors(async (req, res, next) => {
   try {
 
@@ -55,11 +56,10 @@ exports.registerUser = catchAsyncErrors(async (req, res, next) => {
 
 });
 
-
 //*********************OTP REGISTER USER********************** */
 
-exports.otpRegister = catchAsyncErrors(async (req, res, next) =>{
-  try{
+exports.otpRegister = catchAsyncErrors(async (req, res, next) => {
+  try {
 
     const { mobileNo } = req.body;
 
@@ -97,19 +97,19 @@ exports.otpRegister = catchAsyncErrors(async (req, res, next) =>{
     });
 
     await otp.save();
-    res.status(200).send({ message: "Otp send successfully!", mobileNo: mobileNo})
+    res.status(200).send({ message: "Otp send successfully!", mobileNo: mobileNo })
 
-  }catch(err){
+  } catch (err) {
     console.log(err)
     return res
       .status(500)
-      .send({status:false, message:err.message})
+      .send({ status: false, message: err.message })
   }
 })
 
-//**********************VERIFY OTP SIGNUP************************ */
+//**********************VERIFY OTP SIGNUP/Register************************ */
 
-exports.verifyOtpRegister = catchAsyncErrors(async (req, res, next) =>{
+exports.verifyOtpRegister = catchAsyncErrors(async (req, res, next) => {
   try {
 
     const { name, mobileNo, referral, otp } = req.body;
@@ -133,23 +133,23 @@ exports.verifyOtpRegister = catchAsyncErrors(async (req, res, next) =>{
         return res.status(400).send({ success: false, message: "Enter Correct OTP!" });
       }
 
-      const newUser = new User({ name, mobileNo});
+      const newUser = new User({ name, mobileNo });
       const result = await newUser.save();
 
       // console.log(result)
 
-      if (referral) {
-        const userRef = await User.findOne({ _id: referral });
-        if (userRef) {
-          const count = userRef?.referralCount + 50;
-          userRef.referralCount = count;
-          await userRef?.save();
+      // if (referral) {
+      //   const userRef = await User.findOne({ _id: referral });
+      //   if (userRef) {
+      //     const count = userRef?.referralCount + 50;
+      //     userRef.referralCount = count;
+      //     await userRef?.save();
 
-          const count2 = User?.referralCount + 25;
-          User.referralCount = count2;
-          await User?.save();
-        }
-      }
+      //     const count2 = User?.referralCount + 25;
+      //     User.referralCount = count2;
+      //     await User?.save();
+      //   }
+      // }
 
       // const token = jwt.sign(
       //   {
@@ -171,7 +171,7 @@ exports.verifyOtpRegister = catchAsyncErrors(async (req, res, next) =>{
       //   data: result,
       // });
 
-      sendToken(result, 200, res); 
+      sendToken(result, 200, res);
 
     } else {
       // if (!otpHolder || otpHolder.otp !== otp) {
@@ -194,7 +194,7 @@ exports.verifyOtpRegister = catchAsyncErrors(async (req, res, next) =>{
       // );
 
       const OTPDelete = await otpModel.deleteMany({
-        mobileNo: mobileNo ,
+        mobileNo: mobileNo,
       });
 
       // return res.status(200).send({
@@ -202,10 +202,9 @@ exports.verifyOtpRegister = catchAsyncErrors(async (req, res, next) =>{
       //   token: token,
       //   data: user,
       // });
-      sendToken(userData, 200, res); 
+      sendToken(userData, 200, res);
     }
   } catch (err) {
-    console.log(err)
     return res
       .status(500)
       .send({ status: false, message: err.message })
@@ -216,8 +215,9 @@ exports.verifyOtpRegister = catchAsyncErrors(async (req, res, next) =>{
 
 
 
-//***************** Login User********************/
 
+
+//********************* */ Login User *************************
 exports.loginUser = catchAsyncErrors(async (req, res, next) => {
   const { email, password } = req.body;
 
@@ -243,9 +243,7 @@ exports.loginUser = catchAsyncErrors(async (req, res, next) => {
 });
 
 
-
-//********************** */ Login User Using MobileNumber
-
+// Login User Using MobileNumber
 exports.otpLogin = catchAsyncErrors(async (req, res, next) => {
   try {
 
@@ -318,9 +316,9 @@ exports.verifyOpt = catchAsyncErrors(async (req, res, next) => {
 
     const mobileLength = otpHolder.length;
 
-      if (!(otpHolder[mobileLength - 1]?.otp == otp)) {
-        return res.status(400).send({ success: false, message: "Enter Correct OTP!" });
-      }
+    if (!(otpHolder[mobileLength - 1]?.otp == otp)) {
+      return res.status(400).send({ success: false, message: "Enter Correct OTP!" });
+    }
 
     // if (otpHolder.length === 0 || otpHolder[0].otp !== otp) {
     //   return res.status(400).send({
@@ -363,6 +361,13 @@ exports.verifyOpt = catchAsyncErrors(async (req, res, next) => {
     });
   }
 });
+
+
+
+
+
+
+
 
 // Logout User
 exports.logout = catchAsyncErrors(async (req, res, next) => {

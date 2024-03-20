@@ -12,18 +12,34 @@ const ErrorHandler = require("../utils/errorhander");
 exports.createBanner = catchAsyncErrors(async (req, res, next) => {
 
   try {
-    const { category } = req.body;
+    const { categories, subCategory } = req.body;
+
+    // console.log(categories, subCategory, "categorrry")
     // Get the Cloudinary URLs for the uploaded images
     const imageUrls = await Promise.all(req.files.map(async (file) => {
       const imageUrl = await uploadOnCloudinary(file.path);
-      console.log(imageUrl, "uuuuuu")
+      // console.log(imageUrl, "uuuuuu")
       return imageUrl.secure_url; // Assuming you want to store the secure URL
     }));
 
+    // const banner = await bannerModel.create({
+    //   category: category.toLowerCase(),
+    //   bannerImages: imageUrls
+    // })
+
+    const bannerImages = imageUrls.map((url, index) => ({
+      bannerImage: url,
+      category: categories[index].toLowerCase(),
+    }));
+
+    console.log(bannerImages, "banner images");
     const banner = await bannerModel.create({
-      category: category.toLowerCase(),
-      bannerImages: imageUrls
-    })
+      bannerImages: bannerImages,
+      subCategory: subCategory.toLowerCase(),
+    });
+
+    console.log(banner, "categorrry")
+
     res.status(201).json({ success: true, message: "Banner images are created", banner: banner });
 
   } catch (error) {

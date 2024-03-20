@@ -35,6 +35,7 @@ const membership = require("./routes/membershipRoute");
 const Address = require("./routes/addressRoute");
 const Category = require("./routes/categoryRoute");
 const Brand = require("./routes/brandRoute");
+const staff = require("./routes/staffRoute");
 
 
 app.use("/api/v1", product);
@@ -48,6 +49,7 @@ app.use("/api/v1", membership);
 app.use("/api/v1", Address);
 app.use("/api/v1", Category);
 app.use("/api/v1", Brand);
+app.use("/api/v1",staff)
 
 
 

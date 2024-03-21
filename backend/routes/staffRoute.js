@@ -12,6 +12,8 @@ router
     );
 
 router.route("/admin/staff/get")
-        .get( getAllStaffs)
+        .get(getAllStaffs)
 
+
+        
 module.exports = router;

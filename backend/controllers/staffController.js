@@ -19,6 +19,17 @@ exports.addStaff = catchAsyncErrors(async (req, res, next) => {
 
 exports.getAllStaffs = catchAsyncErrors(async (req, res, next) => {
     const staffDetails = await StaffModel.find()
+    if(staffDetails.length === 0){
+        return res.status(404).send({
+            sucess: false,
+            message: "No data found"
+        })
+    }
+
+    return res.status(200).send({
+        sucess: true,
+        message: "data fetched Successfully"
+    })
 })
 
 

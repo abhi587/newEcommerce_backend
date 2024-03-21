@@ -300,8 +300,6 @@ exports.verifyOpt = catchAsyncErrors(async (req, res, next) => {
     const { mobileNo, otp, notificationToken } = req.body;
 
     const otpHolder = await otpModel.find({ mobileNo })
-      .sort({ createdAt: -1 })
-      .limit(1);
 
     const user = await User.findOne({ mobileNo });
 
@@ -312,13 +310,18 @@ exports.verifyOpt = catchAsyncErrors(async (req, res, next) => {
       });
     }
 
-    const userId = user._id.toString();
+    // const userId = user._id.toString();
 
-    const mobileLength = otpHolder.length;
+    // const mobileLength = otpHolder.length;
 
-    if (!(otpHolder[mobileLength - 1]?.otp == otp)) {
-      return res.status(400).send({ success: false, message: "Enter Correct OTP!" });
-    }
+    // if (!(otpHolder[mobileLength - 1]?.otp == otp)) {
+    //   return res.status(400).send({ success: false, message: "Enter Correct OTP!" });
+    // }
+
+    const rightOtpFind = otpHolder[otpHolder.length - 1];
+    if (!(rightOtpFind.mobileNo === mobileNo && rightOtpFind.otp === otp)) {
+      return res.status(400).send({sucess: false, message: "Enter Correct Otp"});
+      }
 
     // if (otpHolder.length === 0 || otpHolder[0].otp !== otp) {
     //   return res.status(400).send({

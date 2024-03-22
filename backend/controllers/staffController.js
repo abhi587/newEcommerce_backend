@@ -13,6 +13,8 @@ exports.addStaff = catchAsyncErrors(async (req, res, next) => {
     });
 });
 
+
+
 //*******************Get All Staffs********************** */
 
 exports.getAllStaffs = catchAsyncErrors(async (req, res, next) => {
@@ -29,6 +31,8 @@ exports.getAllStaffs = catchAsyncErrors(async (req, res, next) => {
         data: staffDetails
     });
 });
+
+
 
 //*********************Get Staff Details By id*********** */
 
@@ -47,6 +51,9 @@ exports.getStaffDetailsById = catchAsyncErrors(async (req, res, next) => {
         data: staffdetailsById
     });
 });
+
+
+
 
 //**********************Update Staff Details***************** */
 
@@ -76,6 +83,9 @@ exports.updateStaffDetails = catchAsyncErrors(async (req, res, next) => {
         updatedData: staffDetails
     });
 });
+
+
+
 
 //**********************Delete Staff Details****************** */
 

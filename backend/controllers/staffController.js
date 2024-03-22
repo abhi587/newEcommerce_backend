@@ -60,10 +60,15 @@ exports.updateStaffDetails = catchAsyncErrors(async (req, res, next) => {
             message: "No data found with this staffId"
         });
     }
-    if (firstName) staffDetails.firstName = firstName;
-    if (lastName) staffDetails.lastName = lastName;
-    if (email) staffDetails.email = email;
-    if (mobileNo) staffDetails.mobileNo = mobileNo;
+    if (firstName) 
+        staffDetails.firstName = firstName;
+    if (lastName) 
+        staffDetails.lastName = lastName;
+    if (email) 
+        staffDetails.email = email;
+    if (mobileNo) 
+        staffDetails.mobileNo = mobileNo;
+
     staffDetails = await staffDetails.save();
     return res.status(200).send({
         success: true,

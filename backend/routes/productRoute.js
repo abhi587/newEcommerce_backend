@@ -85,6 +85,7 @@ router
 
 // router.route('/:id/reviews').post(protect, createProductReview)
 
+
 router
   .route('/:id/reviews')
   .post(isAuthenticatedUser, createProductReview)
@@ -107,6 +108,3 @@ router.route("/wishlist/:wishlistId").delete(isAuthenticatedUser, deleteFromWish
 
 
 module.exports = router;
-
-
-

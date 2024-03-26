@@ -17,6 +17,10 @@ const staffSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
+    coins : {
+        type: number,
+        default: 0
+    }
 })
 //
 

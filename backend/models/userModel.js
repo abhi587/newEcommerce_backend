@@ -1,3 +1,4 @@
+
 const mongoose = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
@@ -44,20 +45,6 @@ const userSchema = new mongoose.Schema({
     // required: [true, "Please Enter Your Mobile Number"],
   },
 
-  isFirstTimeLogin: {
-    type: Boolean,
-    default: true
-  },
-  // avatar: {
-  //   public_id: {
-  //     type: String,
-  //     required: true,
-  //   },
-  //   url: {
-  //     type: String,
-  //     required: true,
-  //   },
-  // },
   role: {
     type: String,
     default: "user",
@@ -124,31 +111,10 @@ const userSchema = new mongoose.Schema({
     // minLength: [4, "Name should have more than 4 characters"],
   },
 
-  mobileNo: {
-    type: String,
-    // required: [true, "Please Enter Your Mobile Number"],
-  },
-
   isFirstTimeLogin: {
     type: Boolean,
     default: true
   },
-  // avatar: {
-  //   public_id: {
-  //     type: String,
-  //     required: true,
-  //   },
-  //   url: {
-  //     type: String,
-  //     required: true,
-  //   },
-  // },
-  role: {
-    type: String,
-    default: "user",
-  },
-
-
 
   addresses: [{
     type: mongoose.Schema.Types.ObjectId,

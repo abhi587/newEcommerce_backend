@@ -59,7 +59,7 @@ exports.getStaffDetailsById = catchAsyncErrors(async (req, res, next) => {
 
 exports.updateStaffDetails = catchAsyncErrors(async (req, res, next) => {
     const staffId = req.params.staffId;
-    const { firstName, lastName, email, mobileNo } = req.body;
+    const { firstName, lastName, email, mobileNo } = req.query;
     let staffDetails = await StaffModel.findById(staffId);
     if (!staffDetails) {
         return res.status(404).send({

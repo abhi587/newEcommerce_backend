@@ -55,6 +55,11 @@ const userSchema = new mongoose.Schema({
     default: 0,
   },
 
+  referralSource: {
+    type: String, // 'regular'(for User) or 'staff'
+    default: 'regular'
+  },
+
   myAddress: [
     {
       address: {

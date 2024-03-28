@@ -62,7 +62,7 @@ exports.registerUser = catchAsyncErrors(async (req, res, next) => {
 exports.otpRegister = catchAsyncErrors(async (req, res, next) => {
   try {
 
-    const { mobileNo } = req.body;
+    const { mobileNo, referral } = req.body;
 
     if (!mobileNo) {
       return res.status(400).json({ message: "Enter Mobile no" });

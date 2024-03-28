@@ -68,6 +68,26 @@ exports.otpRegister = catchAsyncErrors(async (req, res, next) => {
       return res.status(400).json({ message: "Enter Mobile no" });
     }
 
+    if (referral) {
+      const userRef = await User.findOne({ _id: referral });
+      if (userRef) {
+        const count = userRef.referralCount + 50;
+        userRef.referralCount = count;
+        await userRef.save();
+
+        // Check if the referral source is a staff member
+        if (userRef.referralSource === 'staff') {
+          const referringStaffMember = await Staff.findOne({ _id: userRef.referralSourceId });
+          if (referringStaffMember) {
+            const count2 = referringStaffMember.referralCount + 25;
+            referringStaffMember.referralCount = count2;
+            await referringStaffMember.save();
+          }
+        }
+      }
+    }
+
+
     const user = await User.findOne({
       mobileNo: mobileNo,
     });

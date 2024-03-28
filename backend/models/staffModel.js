@@ -17,8 +17,8 @@ const staffSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    coins : {
-        type: number,
+    referralCount: {
+        type: Number,
         default: 0
     }
 })

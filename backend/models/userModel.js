@@ -60,9 +60,9 @@ const userSchema = new mongoose.Schema({
     default: 'regular' // Default to regular user
   },
 
-  referralSource: {
-    type: String, // 'regular'(for User) or 'staff'
-    default: 'regular'
+  referralSourceId: {
+    type: mongoose.Schema.Types.ObjectId, // Assuming staff member ID is stored here
+    default: null // Default to null for regular user
   },
 
   myAddress: [

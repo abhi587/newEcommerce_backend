@@ -62,31 +62,11 @@ exports.registerUser = catchAsyncErrors(async (req, res, next) => {
 exports.otpRegister = catchAsyncErrors(async (req, res, next) => {
   try {
 
-    const { mobileNo, referral } = req.body;
+    const { mobileNo} = req.body;
 
     if (!mobileNo) {
       return res.status(400).json({ message: "Enter Mobile no" });
     }
-
-    if (referral) {
-      const userRef = await User.findOne({ _id: referral });
-      if (userRef) {
-        const count = userRef.referralCount + 50;
-        userRef.referralCount = count;
-        await userRef.save();
-
-        // Check if the referral source is a staff member
-        if (userRef.referralSource === 'staff') {
-          const referringStaffMember = await Staff.findOne({ _id: userRef.referralSourceId });
-          if (referringStaffMember) {
-            const count2 = referringStaffMember.referralCount + 25;
-            referringStaffMember.referralCount = count2;
-            await referringStaffMember.save();
-          }
-        }
-      }
-    }
-
 
     const user = await User.findOne({
       mobileNo: mobileNo,
@@ -130,6 +110,29 @@ exports.verifyOtpRegister = catchAsyncErrors(async (req, res, next) => {
   try {
 
     const { name, mobileNo, referral, otp, email } = req.body;
+
+    if (!mobileNo) {
+      return res.status(400).json({ message: "Enter Mobile no" });
+    }
+
+    if (referral) {
+      const userRef = await User.findOne({ _id: referral });
+      if (userRef) {
+        const count = userRef.referralCount + 50;
+        userRef.referralCount = count;
+        await userRef.save();
+
+        // Check if the referral source is a staff member
+        if (userRef.referralSource === 'staff') {
+          const referringStaffMember = await Staff.findOne({ _id: userRef.referralSourceId });
+          if (referringStaffMember) {
+            const count2 = referringStaffMember.referralCount + 25;
+            referringStaffMember.referralCount = count2;
+            await referringStaffMember.save();
+          }
+        }
+      }
+    }
 
     const otpHolder = await otpModel.findOne({
       mobileNo: mobileNo,
